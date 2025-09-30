@@ -4,6 +4,10 @@ import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
 import type{ FormData } from "./types";
 import StepFour from "./StepFour";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+
 
 const MultiStepForm: React.FC = () => {
   const [step, setStep] = useState<number>(1);
@@ -16,16 +20,24 @@ const MultiStepForm: React.FC = () => {
     state: "",
   });
 
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:5000/api/insert", formData);
+      alert("Data inserted successfully!");
+      navigate("/sucess");
+    } catch (error) {
+      alert("Error inserting data!");
+    }
+  };
+
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
 
-  const handleSubmit = () => {
-    alert("Form submitted successfully!");
-    console.log(formData);
-  };
-
   return (
-    <div className="max-w-lg mx-auto p-6 border rounded-xl shadow-md bg-white">
+    <div className="max-w-lg mx-auto p-6 border rounded-xl shadow-md bg-gray-700 text-white">
       {/* This Is Progress Indicator Which Teels In Which Step We Are */}
       <div className="flex justify-between mb-6">
         {[1, 2, 3, 4].map((s) => (
